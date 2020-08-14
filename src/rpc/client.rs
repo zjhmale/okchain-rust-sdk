@@ -1,6 +1,6 @@
-extern crate hex;
 use crate::types::*;
 use crate::utils::*;
+use hex;
 use reqwest::Response;
 use serde_json::Value;
 

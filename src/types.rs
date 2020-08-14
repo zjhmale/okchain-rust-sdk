@@ -1,4 +1,4 @@
-extern crate base64;
+use base64;
 use serde::{Deserialize, Deserializer};
 use std::fmt;
 
