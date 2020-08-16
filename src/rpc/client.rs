@@ -4,16 +4,16 @@ use hex;
 use reqwest::Response;
 use serde_json::Value;
 
-pub struct RpcClient {
+pub struct OKChainRpcClient {
     client: reqwest::Client,
     url: reqwest::Url,
 }
 
-impl RpcClient {
+impl OKChainRpcClient {
     pub fn new(uri: &str) -> Self {
         let url =
             reqwest::Url::parse(uri).expect("okchain rpc uri, e.g. \"http://127.0.0.1:26657\"");
-        RpcClient {
+        OKChainRpcClient {
             url: url,
             client: reqwest::Client::new(),
         }
@@ -24,7 +24,7 @@ impl RpcClient {
         // let output = resp.json::<HashMap<String, Value>>()?;
         // println!("{}", serde_json::to_string_pretty(&output).unwrap());
 
-        let result = resp.json::<RpcResult>()?;
+        let result = resp.json::<OKChainRpcResult>()?;
         Ok(BaseModel::from(result))
     }
 

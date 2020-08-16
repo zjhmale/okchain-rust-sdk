@@ -1,2 +1,2 @@
 mod client;
-pub use client::RpcClient;
+pub use client::OKChainRpcClient;

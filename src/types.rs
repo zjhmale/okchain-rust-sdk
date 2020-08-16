@@ -3,7 +3,7 @@ use serde::{Deserialize, Deserializer};
 use std::fmt;
 
 #[derive(Clone, Debug)]
-pub struct RpcResult {
+pub struct OKChainRpcResult {
     pub code: u32,
     pub codespace: String,
     pub height: String,
@@ -15,10 +15,10 @@ pub struct RpcResult {
     pub value: Option<String>,
 }
 
-impl RpcResult {
+impl OKChainRpcResult {
     #[allow(dead_code)]
-    pub fn default() -> RpcResult {
-        RpcResult {
+    pub fn default() -> OKChainRpcResult {
+        OKChainRpcResult {
             code: 0,
             codespace: String::from(""),
             height: String::from(""),
@@ -33,19 +33,19 @@ impl RpcResult {
 }
 
 #[derive(Deserialize)]
-struct OKChainRpcResponse {
+struct RawRpcResponse {
     #[allow(dead_code)]
     id: String,
-    result: OKChainRpcResult,
+    result: RawRpcResult,
 }
 
 #[derive(Deserialize)]
-struct OKChainRpcResult {
-    response: OKChainRpcInnerResponse,
+struct RawRpcResult {
+    response: RawRpcInnerResponse,
 }
 
 #[derive(Deserialize)]
-struct OKChainRpcInnerResponse {
+struct RawRpcInnerResponse {
     pub code: u32,
     pub codespace: String,
     pub height: String,
@@ -57,14 +57,14 @@ struct OKChainRpcInnerResponse {
     pub value: Option<String>,
 }
 
-impl<'de> Deserialize<'de> for RpcResult {
+impl<'de> Deserialize<'de> for OKChainRpcResult {
     fn deserialize<D>(deserializer: D) -> Result<Self, D::Error>
     where
         D: Deserializer<'de>,
     {
-        let helper = OKChainRpcResponse::deserialize(deserializer)?;
+        let helper = RawRpcResponse::deserialize(deserializer)?;
         let response = helper.result.response;
-        Ok(RpcResult {
+        Ok(OKChainRpcResult {
             code: response.code,
             codespace: response.codespace,
             height: response.height,
@@ -95,8 +95,8 @@ impl fmt::Debug for BaseModel {
     }
 }
 
-impl From<RpcResult> for BaseModel {
-    fn from(result: RpcResult) -> Self {
+impl From<OKChainRpcResult> for BaseModel {
+    fn from(result: OKChainRpcResult) -> Self {
         match result.code {
             // if the rpc query succeeds
             0 => BaseModel {

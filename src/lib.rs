@@ -5,4 +5,4 @@ pub mod rpc;
 mod types;
 mod utils;
 
-pub use rpc::RpcClient;
+pub use rpc::OKChainRpcClient;
