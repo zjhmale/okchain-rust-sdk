@@ -82,4 +82,36 @@ impl OKChainRpcClient {
         let mut resp = self.abci_query("custom/token/products", Some(data))?;
         self.query_to_bm(&mut resp)
     }
+
+    pub fn get_candles(
+        &self,
+        granularity: u32,
+        product: &str,
+        size: u32,
+    ) -> Result<BaseModel, failure::Error> {
+        ensure!(is_product(product), "invalid product");
+        let data = serde_json::json!({
+            "Product": product,
+            "Granularity": format!("{}", granularity).as_str(),
+            "Size": format!("{}", size).as_str(),
+        })
+        .to_string()
+        .into_bytes();
+
+        let mut resp = self.abci_query("custom/backend/candles", Some(data))?;
+        self.query_to_bm(&mut resp)
+    }
+
+    pub fn get_tickers(&self, count: u32) -> Result<BaseModel, failure::Error> {
+        let data = serde_json::json!({
+            "Product": "",
+            "Count": format!("{}", count).as_str(),
+            "Sort": true,
+        })
+        .to_string()
+        .into_bytes();
+
+        let mut resp = self.abci_query("custom/backend/tickers", Some(data))?;
+        self.query_to_bm(&mut resp)
+    }
 }
